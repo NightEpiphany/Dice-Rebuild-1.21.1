@@ -1,0 +1,7 @@
+{
+    "parent": "dice:block/dice_detector",
+    "textures": {
+        "front": "dice:block/dice_detector_front_8",
+        "bottom": "dice:block/dice_detector_back_on"
+    }
+}

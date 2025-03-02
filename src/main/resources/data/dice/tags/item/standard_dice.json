@@ -1,0 +1,20 @@
+{
+  "values": [
+    "dice:black_d6",
+    "dice:blue_d6",
+    "dice:brown_d6",
+    "dice:cyan_d6",
+    "dice:gray_d6",
+    "dice:green_d6",
+    "dice:light_blue_d6",
+    "dice:light_gray_d6",
+    "dice:lime_d6",
+    "dice:magenta_d6",
+    "dice:purple_d6",
+    "dice:pink_d6",
+    "dice:orange_d6",
+    "dice:red_d6",
+    "dice:white_d6",
+    "dice:yellow_d6"
+  ]
+}

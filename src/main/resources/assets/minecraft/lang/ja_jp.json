@@ -1,0 +1,5 @@
+{
+	"gamerule.dicePrivacy": "ダイスの私的利用制限",
+	"gamerule.eventUseDiceDecayTime": "ダイスにイベント利用の期間",
+	"gamerule.gamblerDiceVisibleDistance": "ゲームでサイコロを投げることができる距離の制限"
+}

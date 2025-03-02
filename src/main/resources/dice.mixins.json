@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.moigferdsrte.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "GamblerSpawnMixin",
+    "LootTableAcceptMixin",
+    "LootTableInjectionMixin",
+    "MagmaDiscardDiceMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"dice_rolling": {
+    "subtitle": "sounds.dice.dice_rolling",
+    "sounds": [
+      "dice:dice_casting"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "dice",
+	"version": "${version}",
+	"name": "Dice",
+	"description": "Roll the dice! A rebuild dice mod with better in-game experience!",
+	"authors": [
+		"NightEpiphany"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/NightEpiphany"
+	},
+	"license": "CC-BY-4.0",
+	"icon": "assets/dice/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+          "com.moigferdsrte.Entrance"
+		],
+		"client": [
+			"com.moigferdsrte.ClientEntrance"
+		]
+	},
+	"mixins": [
+		"dice.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"cloth-config": "*",
+		"modmenu": "*"
+	}
+}

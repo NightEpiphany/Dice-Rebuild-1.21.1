@@ -1,0 +1,5 @@
+{
+	"gamerule.dicePrivacy": "骰子私有使用限製",
+	"gamerule.eventUseDiceDecayTime": "事件用骰子自然消失時間",
+	"gamerule.gamblerDiceVisibleDistance": "賭局當中骰子的投擲距離限製"
+}

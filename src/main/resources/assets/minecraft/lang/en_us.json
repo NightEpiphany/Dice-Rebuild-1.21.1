@@ -1,0 +1,5 @@
+{
+	"gamerule.dicePrivacy": "Dice privacy limit",
+	"gamerule.eventUseDiceDecayTime": "Dice event use decay time",
+	"gamerule.gamblerDiceVisibleDistance": "Gambler's judge limit of the thrown dice distance"
+}

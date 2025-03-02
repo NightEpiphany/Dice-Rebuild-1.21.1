@@ -1,0 +1,24 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"ICI",
+		"CBC",
+		"ICI"
+	],
+	"key": {
+		"I": {
+		"item": "minecraft:cyan_dye"
+		},
+		"B": {
+		"item": "minecraft:stone_button"
+		},
+		"C": {
+		"item": "minecraft:clay_ball"
+		}
+	},
+	"result": {
+		"count": 1,
+		"id": "dice:cyan_d6"
+	}
+}
