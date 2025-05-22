@@ -27,6 +27,7 @@
 	"dice.gamble_lose": "妳輸光了！",
 	"dice.gamble_win": "妳贏了！",
 	"dice.gamble_inform": "這局不算數！",
+	"dice.gamble_maximum_reached": "收手吧，你已經和他賭了太多次了。",
 	"dice.gamble_fair": "平局",
 	"dice.gamble_need_dice": "你需要準備一個骰子。",
 	"dice.gamble_need_different_dice": "你和你對手的骰子顏色相同。",

@@ -45,6 +45,9 @@ public class RefineRegistry {
     public static final GameRules.Key<GameRules.BooleanRule> DICE_PRIVACY =
             GameRuleRegistry.register("dicePrivacy", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
 
+    public static final GameRules.Key<GameRules.IntRule> MAXIMUM_GAMBLE_TIME =
+            GameRuleRegistry.register("maximumGambleTime", GameRules.Category.MISC, GameRuleFactory.createIntRule(20));
+
     public static final GameRules.Key<GameRules.IntRule> EVENT_USE_DICE_DECAY_TIME =
             GameRuleRegistry.register("eventUseDiceDecayTime", GameRules.Category.MISC, GameRuleFactory.createIntRule(4800));
 

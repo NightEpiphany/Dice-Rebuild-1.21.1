@@ -47,11 +47,13 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     @Nullable
     private UUID angryAt;
     private static final String COLOR_LOVER_KEY = "Color";
+    private static final String GAMBLED_TIME_KEY = "GambledTime";
     private static final TrackedData<Boolean> GAMBLING = DataTracker.registerData(GamblerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> ANGER = DataTracker.registerData(GamblerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> COLOR_PREFERENCE = DataTracker.registerData(GamblerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> RIVAL_POINT = DataTracker.registerData(GamblerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> GAMBLER_POINT = DataTracker.registerData(GamblerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> GAMBLED_TIME = DataTracker.registerData(GamblerEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(25, 60);
     private int angerTime;
     private boolean wantsGamble = false;
@@ -243,6 +245,13 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         ItemStack stack = player.getStackInHand(hand);
         World serverWorld = player.getWorld();
         player.getItemCooldownManager().set(stack.getItem(), 40);
+
+        if (gambler.getGambledTime() >= gambler.getWorld().getGameRules().getInt(RefineRegistry.MAXIMUM_GAMBLE_TIME)) {
+            player.sendMessage(Text.translatable("dice.gamble_maximum_reached").formatted(Formatting.GRAY));
+            gambler.wantsGamble = false;
+            return;
+        }
+
         if (stack.isOf(Items.EMERALD)
                 && player.getItemCooldownManager().isCoolingDown(stack.getItem())
                 && player.getInventory().contains(RefineRegistry.STANDARD_DICES)
@@ -319,6 +328,9 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
                         diceCubeEntity.setRandomPoint(gambler.getDataTracker().get(RIVAL_POINT));
                         diceCubeEntity2.setRandomPoint(gambler.getDataTracker().get(GAMBLER_POINT));
                     }
+
+                    gambler.addGambledTime();
+
                     if (gambler.getDataTracker().get(RIVAL_POINT) > gambler.getDataTracker().get(GAMBLER_POINT)) {
                         player.getInventory().insertStack(new ItemStack(Items.EMERALD, countIn * 2));
                         player.sendMessage(Text.translatable("dice.gamble_win").formatted(Formatting.GREEN));
@@ -363,6 +375,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         builder.add(COLOR_PREFERENCE, DyeColor.GRAY.getId());
         builder.add(RIVAL_POINT, 1);
         builder.add(GAMBLER_POINT, 1);
+        builder.add(GAMBLED_TIME, 0);
     }
 
     @Override
@@ -370,6 +383,8 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         super.readCustomDataFromNbt(nbt);
         if (nbt.contains(COLOR_LOVER_KEY, NbtElement.NUMBER_TYPE)){
             this.dataTracker.set(COLOR_PREFERENCE, nbt.getInt(COLOR_LOVER_KEY));
+        }if (nbt.contains(GAMBLED_TIME_KEY, NbtElement.NUMBER_TYPE)) {
+            this.dataTracker.set(GAMBLED_TIME, nbt.getInt(GAMBLED_TIME_KEY));
         }
     }
 
@@ -377,6 +392,15 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putInt(COLOR_LOVER_KEY, this.dataTracker.get(COLOR_PREFERENCE));
+        nbt.putInt(GAMBLED_TIME_KEY, this.dataTracker.get(GAMBLED_TIME));
+    }
+
+    public int getGambledTime() {
+        return this.dataTracker.get(GAMBLED_TIME);
+    }
+
+    public void addGambledTime() {
+        this.dataTracker.set(GAMBLED_TIME, this.getGambledTime() + 1);
     }
 
     public boolean isGambling(){
@@ -606,7 +630,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
     }
 
-    static class GamblerAttackGoal extends MeleeAttackGoal{
+    static class GamblerAttackGoal extends MeleeAttackGoal {
 
         public GamblerAttackGoal(GamblerEntity mob) {
             super(mob, 0.8f, false);

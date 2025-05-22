@@ -1,5 +1,6 @@
 {
 	"gamerule.dicePrivacy": "骰子私有使用限制",
+	"gamerule.maximumGambleTime": "和一位赌徒进行赌局的次数上限",
 	"gamerule.eventUseDiceDecayTime": "事件用骰子自然消失时间",
 	"gamerule.gamblerDiceVisibleDistance": "赌局当中骰子的投掷距离限制"
 }

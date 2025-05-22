@@ -40,6 +40,8 @@ public class DiceCubeEntity extends Entity {
      * @author: NightEpiphany
      */
 
+    //TODO:Explosive Dice
+
     public static TrackedData<Float> ROLL_FLOOR = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static TrackedData<Float> PREVIOUS_Y_VEL = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Byte> COLOR = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.BYTE);

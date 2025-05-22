@@ -28,6 +28,7 @@
 	"dice.gamble_win": "You won!",
 	"dice.gamble_fair": "Fair round.",
 	"dice.gamble_inform": "This round doesn't count!",
+	"dice.gamble_maximum_reached": "You can't gamble with him any more.",
 	"dice.gamble_need_dice": "You don't have a dice.",
 	"dice.gamble_need_different_dice": "You & your rival's dice has the same dye color.",
 	"dice.gamble_need_standard_dice": "You need a dice that is not sticky.",

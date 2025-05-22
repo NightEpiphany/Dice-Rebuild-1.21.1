@@ -27,6 +27,7 @@
 	"dice.gamble_lose": "あなたはそれをすべて失いました。",
 	"dice.gamble_win": "あなたの勝ち！",
 	"dice.gamble_inform": "このラウンドはカウントされません!",
+	"dice.gamble_maximum_reached": "彼とはもう賭け事ができません。",
 	"dice.gamble_fair": "描く",
 	"dice.gamble_need_dice": "サイコロを用意する必要があります。",
 	"dice.gamble_need_different_dice": "あなたと対戦相手のサイコロは同じ色です。",
