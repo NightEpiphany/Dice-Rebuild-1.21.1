@@ -360,7 +360,13 @@ public class DiceCubeEntity extends Entity {
 
     public static int getDyedColor(DyeColor color) {
         if (color == DyeColor.WHITE) {
-            return 16777215;
+            int i =  color.getEntityColor();
+            return ColorHelper.Argb.getArgb(
+                    255,
+                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getRed(i) * 1.025F), 255),
+                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getGreen(i) * 1.025F), 255),
+                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getBlue(i) * 1.025F), 255)
+            );
         }else if (color == DyeColor.PINK) {
             int i = ColorHelper.Argb.fullAlpha(14381973);
             float brightnessFactor = 1.2125F;

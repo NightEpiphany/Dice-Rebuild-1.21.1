@@ -300,6 +300,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
 
             TimerTask task = new TimerTask() {
                 public void run() {
+
                     if (diceCubeEntity.isOnGround() && diceCubeEntity2.isOnGround()) {
                         if (diceCubeEntity.isTouchingWater()
                                 || diceCubeEntity2.isTouchingWater()
@@ -334,6 +335,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
                     if (gambler.getDataTracker().get(RIVAL_POINT) > gambler.getDataTracker().get(GAMBLER_POINT)) {
                         player.getInventory().insertStack(new ItemStack(Items.EMERALD, countIn * 2));
                         player.sendMessage(Text.translatable("dice.gamble_win").formatted(Formatting.GREEN));
+                        //ClientPlayNetworking.send(new GambleCompetePayload(map));
                         gambler.playSound(SoundEvents.ENTITY_PILLAGER_HURT, 1.0F, 1.0F);
                         if (gambler.getWorld().getRandom().nextBoolean()) {
                             gambler.getDataTracker().set(ANGER, true);
