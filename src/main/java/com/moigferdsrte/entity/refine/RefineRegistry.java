@@ -6,17 +6,20 @@ import com.moigferdsrte.entity.extension.GamblerEntity;
 import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeEntity;
 import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeItem;
 import com.moigferdsrte.particle.DiceCubeParticle;
+import com.moigferdsrte.particle.DiceCubeParticleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.enums.NoteBlockInstrument;
+import net.minecraft.block.enums.Instrument;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.*;
@@ -36,11 +39,10 @@ import net.minecraft.world.GameRules;
 
 public class RefineRegistry {
 
-    public static final ParticleType<DiceCubeParticle> DICE_PARTICLE = FabricParticleTypes.complex(
-            false,
-            DiceCubeParticle::createCodec,
-            DiceCubeParticle::createPacketCodec
-    );
+//    public static final ParticleType<DiceCubeParticle> DICE_PARTICLE = FabricParticleTypes.complex(
+//            DiceCubeParticle.FACTORY
+//    );
+
 
     public static final GameRules.Key<GameRules.BooleanRule> DICE_PRIVACY =
             GameRuleRegistry.register("dicePrivacy", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
@@ -70,27 +72,25 @@ public class RefineRegistry {
             Registry.register(
                     Registries.ENTITY_TYPE,
                     Identifier.of(Entrance.MOD_ID, "gambler"),
-                    EntityType.Builder.create(GamblerEntity::new, SpawnGroup.MONSTER)
+                    FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, GamblerEntity::new)
                             .spawnableFarFromPlayer()
-                            .dimensions(0.6F, 1.95F)
-                            .passengerAttachments(2.0F)
-                            .vehicleAttachment(-0.6F)
-                            .maxTrackingRange(8)
-                            .build(Entrance.MOD_ID + "gambler"));
+                            .dimensions(new EntityDimensions(0.6F, 1.95F, true))
+                            .trackRangeChunks(6)
+                            .build());
 
     public static final EntityType<DiceCubeEntity> DICE =
             Registry.register(
                     Registries.ENTITY_TYPE,
                     Identifier.of(Entrance.MOD_ID, "dice_entity"),
-                    EntityType.Builder.<DiceCubeEntity>create(DiceCubeEntity::new, SpawnGroup.MISC)
-                            .dimensions(0.3125f, 0.3125f).build(Entrance.MOD_ID + "dice_entity"));
+                    FabricEntityTypeBuilder.<DiceCubeEntity>create(SpawnGroup.MISC, DiceCubeEntity::new)
+                            .dimensions(new EntityDimensions(0.3125f, 0.3125f, true)).build());
 
     public static final EntityType<StickyDiceCubeEntity> STICKY_DICE =
             Registry.register(
                     Registries.ENTITY_TYPE,
                     Identifier.of(Entrance.MOD_ID, "sticky_dice_entity"),
-                    EntityType.Builder.<StickyDiceCubeEntity>create(StickyDiceCubeEntity::new, SpawnGroup.MISC)
-                            .dimensions(0.3125f, 0.3125f).build(Entrance.MOD_ID + "sticky_dice_entity"));
+                    FabricEntityTypeBuilder.<StickyDiceCubeEntity>create(SpawnGroup.MISC, StickyDiceCubeEntity::new)
+                            .dimensions(new EntityDimensions(0.3125f, 0.3125f, true)).build());
 
     public static final Block DICE_DETECTOR = Registry.register(Registries.BLOCK,
             RegistryKey.of(Registries.BLOCK.getKey(),
@@ -98,7 +98,7 @@ public class RefineRegistry {
             new DiceDetectorBlock(
                     AbstractBlock.Settings.create()
                             .mapColor(MapColor.STONE_GRAY)
-                            .instrument(NoteBlockInstrument.BASEDRUM)
+                            .instrument(Instrument.BASEDRUM)
                             .strength(3.0F)
                             .requiresTool()
                             .sounds(BlockSoundGroup.STONE)
@@ -273,6 +273,6 @@ public class RefineRegistry {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(RefineRegistry::toolGroup);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(RefineRegistry::spawnEggGroup);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(RefineRegistry::redstoneGroup);
-        Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Entrance.MOD_ID, "dice_particle"), DICE_PARTICLE);
+        //Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Entrance.MOD_ID, "dice_particle"), DICE_PARTICLE);
     }
 }

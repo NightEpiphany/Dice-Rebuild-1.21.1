@@ -2,7 +2,6 @@ package com.moigferdsrte;
 
 import com.moigferdsrte.entity.extension.GamblerEntity;
 import com.moigferdsrte.entity.refine.RefineRegistry;
-import com.moigferdsrte.network.DiceNetwork;
 import com.moigferdsrte.particle.DiceCubeParticleFactory;
 import net.fabricmc.api.ModInitializer;
 
@@ -21,7 +20,6 @@ public class Entrance implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(RefineRegistry.GAMBLER, GamblerEntity.createGamblerAttributes());
 		DiceCubeParticleFactory.init();
 		RefineRegistry.init();
-		DiceNetwork.init();
 		LOGGER.info("Hello Fabric world!");
 	}
 }

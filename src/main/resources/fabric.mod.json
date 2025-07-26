@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "dice",
-	"version": "${version}",
+	"version": "1.0.2",
 	"name": "Dice",
 	"description": "Roll the dice! A rebuild dice mod with better in-game experience!",
 	"authors": [
@@ -27,10 +27,8 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.9",
-		"minecraft": "~1.21.1",
-		"java": ">=21",
-		"fabric-api": "*",
-		"cloth-config": "*",
-		"modmenu": "*"
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
 	}
 }

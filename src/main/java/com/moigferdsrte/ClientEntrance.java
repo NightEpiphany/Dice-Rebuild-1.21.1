@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.IllagerEntityModel;
 
 public class ClientEntrance implements ClientModInitializer {
-
     @Override
     public void onInitializeClient() {
         EntityModelLayerRegistry.registerModelLayer(DiceCubeEntityModel.LAYER, DiceCubeEntityModel::getTexturedModelData);
@@ -24,6 +23,6 @@ public class ClientEntrance implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(RefineRegistry.GAMBLER_LAYER, IllagerEntityModel::getTexturedModelData);
         EntityRendererRegistry.register(RefineRegistry.GAMBLER, GamblerEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(CarriedDiceCubeEntityModel.LAYER, CarriedDiceCubeEntityModel::getTexturedModelData);
-        ParticleFactoryRegistry.getInstance().register(RefineRegistry.DICE_PARTICLE, DiceCubeParticleFactory.DiceFactory::new);
+        //ParticleFactoryRegistry.getInstance().register(RefineRegistry.DICE_PARTICLE, DiceCubeParticleFactory.DiceFactory::new);
     }
 }

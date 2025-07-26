@@ -1,16 +1,16 @@
 package com.moigferdsrte.entity.refine;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.dispenser.ItemDispenserBehavior;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,9 +39,9 @@ public class DiceCubeItem extends Item {
             if (stack.isOf(ItemStack.EMPTY.getItem())){
                 return this.defaultBehavior.dispense(pointer, stack);
             }
-            Direction direction = pointer.state().get(DispenserBlock.FACING);
-            ServerWorld serverWorld = pointer.world();
-            Vec3d vec3d = pointer.centerPos();
+            Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
+            ServerWorld serverWorld = pointer.getWorld();
+            Vec3d vec3d = pointer.getPos().toCenterPos();
             double d = vec3d.getX() + (double)direction.getOffsetX() * 1.125;
             double e = Math.floor(vec3d.getY()) + (double)direction.getOffsetY();
             double f = vec3d.getZ() + (double)direction.getOffsetZ() * 1.125;
@@ -107,10 +107,6 @@ public class DiceCubeItem extends Item {
             }
         }
 
-        @Override
-        protected void playSound(BlockPointer pointer) {
-            pointer.world().syncWorldEvent(WorldEvents.DISPENSER_DISPENSES, pointer.pos(), 0);
-        }
     };
 
 
@@ -126,12 +122,16 @@ public class DiceCubeItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if(user.getStackInHand(hand).getItem() instanceof DiceCubeItem)
         {
-            user.getStackInHand(hand).decrementUnlessCreative(1,user);
-            Vec3d spawnPos = user.getPos().add(0,user.getFacing() == Direction.DOWN && !user.isOnGround() && user.getWorld().getBlockState(user.getBlockPos().add(0, 2, 0)).isIn(BlockTags.AIR) ? user.getEyeHeight(user.getPose()) - 1.125 : user.getEyeHeight(user.getPose()),0).add(user.getRotationVector().multiply(1.5));
+            if (!user.getAbilities().creativeMode) {
+                user.getStackInHand(hand).decrement(1);
+            }
+            Vec3d spawnPos = user.getPos().add(0,user.getHorizontalFacing() == Direction.DOWN && !user.isOnGround() && user.getWorld().getBlockState(user.getBlockPos().add(0, 2, 0)).isOf(Blocks.AIR) ? user.getEyeHeight(user.getPose()) - 1.125 : user.getEyeHeight(user.getPose()),0).add(user.getRotationVector().multiply(1.5));
             DiceCubeEntity diceCubeEntity = new DiceCubeEntity(world,spawnPos.getX(),spawnPos.getY(),spawnPos.getZ());
             if (user.getEquippedStack(EquipmentSlot.OFFHAND).isOf(Items.GLOWSTONE_DUST))
                 diceCubeEntity.setIlluminance(true);
-            user.getEquippedStack(EquipmentSlot.OFFHAND).decrementUnlessCreative(1, user);
+            if (!user.getAbilities().creativeMode) {
+                user.getEquippedStack(EquipmentSlot.OFFHAND).decrement(1);
+            }
             diceCubeEntity.setVelocity(user.getRotationVector().multiply(1));
             diceCubeEntity.setColor(this.color);
             diceCubeEntity.setOwner(user.getUuidAsString());
@@ -155,10 +155,9 @@ public class DiceCubeItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        super.appendTooltip(stack, context, tooltip, type);
-        if (type.isCreative()) {
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if (context.isCreative())
             tooltip.add(Text.translatable("dice.glowstone_dust_appendable").formatted(Formatting.GOLD));
-        }
+        super.appendTooltip(stack, world, tooltip, context);
     }
 }

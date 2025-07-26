@@ -8,6 +8,7 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,7 @@ import java.util.function.BiConsumer;
 @Mixin(VanillaChestLootTableGenerator.class)
 public class LootTableAcceptMixin {
     @Inject(method = "accept", at = @At("HEAD"))
-    public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> lootTableBiConsumer, CallbackInfo ci) {
+    public void accept(BiConsumer<Identifier, LootTable.Builder> lootTableBiConsumer, CallbackInfo ci) {
         lootTableBiConsumer.accept(LootTables.WOODLAND_MANSION_CHEST, this.createExtra());
     }
 

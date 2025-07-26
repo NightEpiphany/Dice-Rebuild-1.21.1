@@ -2,8 +2,9 @@ package com.moigferdsrte.entity.extension;
 
 import com.moigferdsrte.entity.refine.DiceCubeEntity;
 import com.moigferdsrte.entity.refine.RefineRegistry;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.provider.EnchantmentProviders;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -22,8 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.tag.EntityTypeTags;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -68,7 +67,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     public void setTarget(@Nullable LivingEntity target) {
         if (target == null) {
             this.getDataTracker().set(ANGER, false);
-        } else if (target.hasStatusEffect(StatusEffects.BAD_OMEN) || target.hasStatusEffect(StatusEffects.TRIAL_OMEN) || target.hasStatusEffect(StatusEffects.RAID_OMEN)){
+        } else if (target.hasStatusEffect(StatusEffects.BAD_OMEN)){
             this.getDataTracker().set(ANGER, true);
         }
         super.setTarget(target);
@@ -77,7 +76,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (source.getAttacker() instanceof PlayerEntity player && !player.isCreative()
-                || source.getAttacker() instanceof PathAwareEntity entity && !entity.getType().isIn(EntityTypeTags.ILLAGER_FRIENDS)
+                || source.getAttacker() instanceof PathAwareEntity entity
         ){
             this.dataTracker.set(ANGER, true);
         }
@@ -98,6 +97,11 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 15.0F, 1.0F));
         this.goalSelector.add(6, new WanderAroundGoal(this, 0.6));
         this.goalSelector.add(6, new LookAtEntityGoal(this, MobEntity.class, 15.0F));
+    }
+
+    @Override
+    public void addBonusForWave(int wave, boolean unused) {
+
     }
 
     public static DefaultAttributeContainer.Builder createGamblerAttributes() {
@@ -138,7 +142,7 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         this.enchantMainHandItem(world, random, localDifficulty);
 
         for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-            if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+            if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
                 this.enchantEquipment(world, random, equipmentSlot, localDifficulty);
             }
         }
@@ -155,7 +159,9 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     private void enchantEquipment(ServerWorldAccess world, EquipmentSlot slot, Random random, float power, LocalDifficulty localDifficulty) {
         ItemStack itemStack = this.getEquippedStack(slot);
         if (!itemStack.isEmpty() && random.nextFloat() < power * localDifficulty.getClampedLocalDifficulty() && !itemStack.isIn(RefineRegistry.DICES) && !itemStack.isOf(Items.EMERALD)) {
-            EnchantmentHelper.applyEnchantmentProvider(itemStack, world.getRegistryManager(), EnchantmentProviders.MOB_SPAWN_EQUIPMENT, localDifficulty, random);
+            Map<Enchantment, Integer> map = EnchantmentHelper.get(itemStack);
+            map.putIfAbsent(Enchantments.SHARPNESS, 1);
+            EnchantmentHelper.set(map, itemStack);
             this.equipStack(slot, itemStack);
         }
     }
@@ -314,8 +320,6 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
                                 || diceCubeEntity2.isInsideWall()
                                 || diceCubeEntity.isOnFire()
                                 || diceCubeEntity2.isOnFire()
-                                || diceCubeEntity.isInFluid()
-                                || diceCubeEntity2.isInFluid()
                                 || !diceCubeEntity.isNotFarFrom(gambler, gambler.getWorld().getGameRules().getInt(RefineRegistry.GAMBLER_DICE_VISIBLE_DISTANCE))
                                 || !diceCubeEntity2.isNotFarFrom(gambler, gambler.getWorld().getGameRules().getInt(RefineRegistry.GAMBLER_DICE_VISIBLE_DISTANCE))
 
@@ -370,14 +374,14 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(GAMBLING, false);
-        builder.add(ANGER, false);
-        builder.add(COLOR_PREFERENCE, DyeColor.GRAY.getId());
-        builder.add(RIVAL_POINT, 1);
-        builder.add(GAMBLER_POINT, 1);
-        builder.add(GAMBLED_TIME, 0);
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(GAMBLING, false);
+        this.dataTracker.startTracking(ANGER, false);
+        this.dataTracker.startTracking(COLOR_PREFERENCE, DyeColor.GRAY.getId());
+        this.dataTracker.startTracking(RIVAL_POINT, 1);
+        this.dataTracker.startTracking(GAMBLER_POINT, 1);
+        this.dataTracker.startTracking(GAMBLED_TIME, 0);
     }
 
     @Override
@@ -540,13 +544,12 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         return State.CROSSED;
     }
 
-    @Nullable
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public @Nullable EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         Random random = world.getRandom();
         this.initEquipment(random, difficulty);
         this.updateEnchantments(world, random, difficulty);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
     @Override
@@ -556,8 +559,8 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
     }
 
     @Override
-    protected void drop(ServerWorld world, DamageSource damageSource) {
-        super.drop(world, damageSource);
+    protected void drop(DamageSource source) {
+        super.drop(source);
     }
 
     @Override
@@ -585,12 +588,6 @@ public class GamblerEntity extends IllagerEntity implements Angerable {
         return SoundEvents.ENTITY_ILLUSIONER_HURT;
     }
 
-
-
-    @Override
-    public void addBonusForWave(ServerWorld world, int wave, boolean unused) {
-
-    }
 
     @Override
     public SoundEvent getCelebratingSound() {

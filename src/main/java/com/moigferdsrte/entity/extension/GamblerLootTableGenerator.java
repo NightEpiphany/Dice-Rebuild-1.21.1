@@ -6,17 +6,15 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.EnchantedCountIncreaseLootFunction;
+import net.minecraft.loot.function.LootingEnchantLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 
 public class GamblerLootTableGenerator extends EntityLootTableGenerator {
-    public GamblerLootTableGenerator(RegistryWrapper.WrapperLookup registryLookup) {
-        super(FeatureFlags.FEATURE_MANAGER.getFeatureSet(), registryLookup);
+    public GamblerLootTableGenerator() {
+        super(FeatureFlags.FEATURE_MANAGER.getFeatureSet());
     }
 
     @Override
@@ -28,7 +26,7 @@ public class GamblerLootTableGenerator extends EntityLootTableGenerator {
                                 .with(
                                         ItemEntry.builder(Items.EMERALD)
                                                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0.0F, 3.0F)))
-                                                .apply(EnchantedCountIncreaseLootFunction.builder(this.registryLookup, UniformLootNumberProvider.create(1.0F, 5.0F)))
+                                                .apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0.0F, 1.0F)))
                                 )
                 )
         );

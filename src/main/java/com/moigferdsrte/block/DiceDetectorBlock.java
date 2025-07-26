@@ -2,18 +2,16 @@ package com.moigferdsrte.block;
 
 import com.moigferdsrte.entity.refine.DiceCubeEntity;
 import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeEntity;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FacingBlock;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
@@ -32,13 +30,13 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class DiceDetectorBlock extends FacingBlock {
 
     public static final IntProperty POWER = Properties.POWER;
-    public static final MapCodec<DiceDetectorBlock> CODEC = createCodec(DiceDetectorBlock::new);
 
     private final DiceValueIndicator indicator;
 
@@ -78,38 +76,33 @@ public class DiceDetectorBlock extends FacingBlock {
     }
 
     @Override
-    protected boolean emitsRedstonePower(BlockState state) {
+    public boolean emitsRedstonePower(BlockState state) {
         return true;
     }
 
     @Override
-    protected int getStrongRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+    public int getStrongRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         return state.getWeakRedstonePower(world, pos, direction);
     }
 
     @Override
-    protected int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
+    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         return state.get(FACING) == direction ? this.indicator.value : 0;
     }
 
     @Override
-    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
     @Override
-    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite().getOpposite());
-    }
-
-    @Override
-    protected MapCodec<DiceDetectorBlock> getCodec() {
-        return CODEC;
     }
 
     @Override
@@ -121,7 +114,7 @@ public class DiceDetectorBlock extends FacingBlock {
     }
 
     @Override
-    protected void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
+    public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
         int i = trigger(world, state, hit, projectile);
         if (projectile.getOwner() instanceof ServerPlayerEntity serverPlayerEntity) {
             serverPlayerEntity.incrementStat(Stats.TARGET_HIT);
@@ -152,7 +145,7 @@ public class DiceDetectorBlock extends FacingBlock {
     }
 
     @Override
-    protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!world.isClient() && !state.isOf(oldState.getBlock())) {
             if (state.get(POWER) > 0 && !world.getBlockTickScheduler().isQueued(pos, this)) {
                 world.setBlockState(pos, state.with(POWER, 0), Block.NOTIFY_LISTENERS | Block.FORCE_STATE);
@@ -161,7 +154,7 @@ public class DiceDetectorBlock extends FacingBlock {
     }
 
     @Override
-    protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.get(POWER) != 0) {
             world.setBlockState(pos, state.with(POWER, 0), Block.NOTIFY_ALL);
         }
@@ -175,7 +168,7 @@ public class DiceDetectorBlock extends FacingBlock {
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(
+    public BlockState getStateForNeighborUpdate(
             BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos
     ) {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -188,8 +181,8 @@ public class DiceDetectorBlock extends FacingBlock {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-        super.appendTooltip(stack, context, tooltip, options);
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         tooltip.add(Text.literal("WIP").formatted(Formatting.BOLD));
+        super.appendTooltip(stack, world, tooltip, options);
     }
 }
