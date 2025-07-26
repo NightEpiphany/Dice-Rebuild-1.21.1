@@ -6,6 +6,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.structure.WoodlandMansionGenerator;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -21,10 +22,9 @@ import java.util.List;
 
 @Mixin(WoodlandMansionGenerator.Piece.class)
 public class GamblerSpawnMixin {
-
 	@Inject(method = "handleMetadata", at = @At("HEAD"), cancellable = true)
 	private void data(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox, CallbackInfo ci){
-	 if (!metadata.startsWith("Chest")){
+		if (!metadata.startsWith("Chest")){
 			List<MobEntity> list = new ArrayList<>();
 			switch (metadata) {
 				case "Mage":
@@ -51,11 +51,11 @@ public class GamblerSpawnMixin {
 				if (mobEntity != null) {
 					mobEntity.setPersistent();
 					mobEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
-					mobEntity.initialize(world, world.getLocalDifficulty(mobEntity.getBlockPos()), SpawnReason.STRUCTURE, null);
+					mobEntity.initialize(world, world.getLocalDifficulty(mobEntity.getBlockPos()), SpawnReason.STRUCTURE, null, null);
 					world.spawnEntityAndPassengers(mobEntity);
 					world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_LISTENERS);
 				}
 			}ci.cancel();
-	 }
+		}
 	}
 }

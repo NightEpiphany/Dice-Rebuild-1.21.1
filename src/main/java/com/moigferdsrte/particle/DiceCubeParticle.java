@@ -1,13 +1,18 @@
 package com.moigferdsrte.particle;
 
-import com.mojang.serialization.MapCodec;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.particle.ShriekParticleEffect;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.ColorHelper;
+
+import java.util.Locale;
 
 public class DiceCubeParticle implements ParticleEffect {
 
@@ -19,17 +24,40 @@ public class DiceCubeParticle implements ParticleEffect {
         this.color = color;
     }
 
-    public static MapCodec<DiceCubeParticle> createCodec(ParticleType<DiceCubeParticle> type) {
-        return Codecs.ARGB.<DiceCubeParticle>xmap(color -> new DiceCubeParticle(type, color), diceCubeParticle -> diceCubeParticle.color).fieldOf("color");
-    }
-
-    public static PacketCodec<? super ByteBuf, DiceCubeParticle> createPacketCodec(ParticleType<DiceCubeParticle> type) {
-        return PacketCodecs.INTEGER.xmap(color -> new DiceCubeParticle(type, color), particleEffect -> particleEffect.color);
-    }
+//    public DiceCubeParticle(int color) {
+//        this.type = RefineRegistry.DICE_PARTICLE;
+//        this.color = color;
+//    }
+//
+//    public static final Codec<DiceCubeParticle> CODEC = RecordCodecBuilder.create(
+//            instance -> instance.group(Codec.INT.fieldOf("color").forGetter(particleEffect -> particleEffect.color)).apply(instance, DiceCubeParticle::new)
+//    );
+//
+//    public static final ParticleEffect.Factory<DiceCubeParticle> FACTORY = new ParticleEffect.Factory<DiceCubeParticle>() {
+//        public DiceCubeParticle read(ParticleType<DiceCubeParticle> particleType, StringReader stringReader) throws CommandSyntaxException {
+//            stringReader.expect(' ');
+//            int i = stringReader.readInt();
+//            return new DiceCubeParticle(i);
+//        }
+//
+//        public DiceCubeParticle read(ParticleType<DiceCubeParticle> particleType, PacketByteBuf packetByteBuf) {
+//            return new DiceCubeParticle(packetByteBuf.readVarInt());
+//        }
+//    };
 
     @Override
     public ParticleType<?> getType() {
         return this.type;
+    }
+
+    @Override
+    public void write(PacketByteBuf buf) {
+        buf.writeVarInt(this.color);
+    }
+
+    @Override
+    public String asString() {
+        return String.format(Locale.ROOT, "%s %d", Registries.PARTICLE_TYPE.getId(this.getType()), this.color);
     }
 
     public float getRed() {

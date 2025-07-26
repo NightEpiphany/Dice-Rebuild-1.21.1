@@ -32,7 +32,7 @@ public class DiceCubeEntityModel extends EntityModel<DiceCubeEntity> {
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-        dice.render(matrices, vertices, light, overlay, color);
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+        dice.render(matrices, vertices, light, overlay, red, green, blue, alpha);
     }
 }

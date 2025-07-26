@@ -91,15 +91,15 @@ public class StickyDiceCubeEntity extends Entity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(POINT, 1);
-        builder.add(ROLL_FLOOR,0f);
-        builder.add(PREVIOUS_Y_VEL,0f);
-        builder.add(TYPE, false);
-        builder.add(OWNER, "");
-        builder.add(LUCK_INDICATOR, 0);
-        builder.add(COLLIDE, true);
-        builder.add(ILLUMINANCE, false);
+    protected void initDataTracker() {
+        this.dataTracker.startTracking(POINT, 1);
+        this.dataTracker.startTracking(ROLL_FLOOR,0f);
+        this.dataTracker.startTracking(PREVIOUS_Y_VEL,0f);
+        this.dataTracker.startTracking(TYPE, false);
+        this.dataTracker.startTracking(OWNER, "");
+        this.dataTracker.startTracking(LUCK_INDICATOR, 0);
+        this.dataTracker.startTracking(COLLIDE, true);
+        this.dataTracker.startTracking(ILLUMINANCE, false);
     }
 
     @Override
@@ -162,6 +162,7 @@ public class StickyDiceCubeEntity extends Entity {
     public boolean collidesWithStateAtPos(BlockPos pos, BlockState state) {
         return super.collidesWithStateAtPos(pos, state);
     }
+
 
     @Override
     public boolean collidesWith(Entity other) {
@@ -236,7 +237,7 @@ public class StickyDiceCubeEntity extends Entity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if(source.isDirect() && source.getAttacker() == null){
+        if(!source.isIndirect() && source.getAttacker() == null){
 
             killIt(true);
         }

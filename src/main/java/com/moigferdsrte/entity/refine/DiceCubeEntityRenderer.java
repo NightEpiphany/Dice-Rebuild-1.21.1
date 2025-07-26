@@ -1,6 +1,7 @@
 package com.moigferdsrte.entity.refine;
 
 import com.moigferdsrte.Entrance;
+import com.moigferdsrte.util.ColorUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
@@ -9,8 +10,10 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.LightType;
 
@@ -83,7 +86,25 @@ public class DiceCubeEntityRenderer extends EntityRenderer<DiceCubeEntity> {
                 }
             }
         }
-        dice.render(matrices,vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity))),light, OverlayTexture.DEFAULT_UV, DiceCubeEntity.getDyedColor(entity.getColor()));
+        float[] dyeColors = DiceCubeEntity.getDyedColor(entity.getColor());
+        float factor = 1.00215F;
+        if (entity.getColor() == DyeColor.CYAN)
+            factor = 1.0125F;
+        if (entity.getColor() == DyeColor.PINK)
+            factor = 1.0425F;
+        if (entity.getColor() == DyeColor.YELLOW)
+            factor = 1.0628F;
+        float[] newColors = ColorUtils.brightenColor(dyeColors[0], dyeColors[1], dyeColors[2], factor);
+        dice.render(
+                matrices,
+                vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity))),
+                light,
+                OverlayTexture.DEFAULT_UV,
+                newColors[0],
+                newColors[1],
+                newColors[2],
+                1.0F
+        );
         matrices.pop();
     }
 

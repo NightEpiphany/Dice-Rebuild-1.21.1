@@ -33,12 +33,12 @@ public class CarriedDiceCubeEntityModel extends EntityModel<DiceCubeEntity> {
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-        root.render(matrices, vertices, light, overlay, color);
+    public void setAngles(DiceCubeEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
     }
 
     @Override
-    public void setAngles(DiceCubeEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
+        root.render(matrices, vertices, light, overlay, red, green, blue, alpha);
     }
 }

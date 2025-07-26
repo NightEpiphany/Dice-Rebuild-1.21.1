@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.moigferdsrte.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "GamblerSpawnMixin",
     "LootTableAcceptMixin",
@@ -10,5 +10,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  }
 }

@@ -2,12 +2,10 @@ package com.moigferdsrte.entity.refine;
 
 import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeEntity;
 import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.server.network.EntityTrackerEntry;
 
 public class DiceHitBoxEntity extends Entity {
 
@@ -26,15 +24,15 @@ public class DiceHitBoxEntity extends Entity {
     }
 
     @Override
+    protected void initDataTracker() {
+
+    }
+
+    @Override
     public void tick() {
         super.tick();
         this.move(MovementType.SELF,dice.getVelocity());
         this.setPosition(dice.getPos());
-    }
-
-    @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-
     }
 
     @Override
@@ -63,10 +61,12 @@ public class DiceHitBoxEntity extends Entity {
     protected void readCustomDataFromNbt(NbtCompound nbt) {
 
     }
+
     @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry) {
-        throw new UnsupportedOperationException();
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
+        return super.createSpawnPacket();
     }
+
     public boolean shouldSave() {
         return false;
     }

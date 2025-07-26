@@ -1,6 +1,7 @@
 package com.moigferdsrte.entity.refine;
 
 import com.moigferdsrte.particle.DiceCubeParticle;
+import com.moigferdsrte.util.ColorIndexIndicator;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -14,6 +15,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -44,7 +46,7 @@ public class DiceCubeEntity extends Entity {
 
     public static TrackedData<Float> ROLL_FLOOR = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.FLOAT);
     public static TrackedData<Float> PREVIOUS_Y_VEL = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Byte> COLOR = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Integer> COLOR = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> EVENT_USE = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> POINT = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<String> OWNER = DataTracker.registerData(DiceCubeEntity.class, TrackedDataHandlerRegistry.STRING);
@@ -162,12 +164,13 @@ public class DiceCubeEntity extends Entity {
     }
 
     private void spawnParticles(int amount) {
-        int i = getDyedColor(this.getColor());
-        if (i != -1 && amount > 0) {
+        //int i = this.getColor_().getColor();
+        if (amount > 0) {
             for (int j = 0; j < amount; j++) {
                 this.getWorld()
                         .addParticle(
-                                DiceCubeParticle.create(RefineRegistry.DICE_PARTICLE, i), this.getParticleX(0.525), this.getRandomBodyY(), this.getParticleZ(0.5), 0.0, 0.0, 0.0
+                                ParticleTypes.ASH, this.getParticleX(1.0), this.getRandomBodyY() + 0.5, this.getParticleZ(1.0), 0.0, 0.0, 0.0
+                                //DiceCubeParticle.create(RefineRegistry.DICE_PARTICLE, i), this.getParticleX(0.525), this.getRandomBodyY(), this.getParticleZ(0.5), 0.0, 0.0, 0.0
                         );
             }
         }
@@ -336,7 +339,7 @@ public class DiceCubeEntity extends Entity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if(source.isDirect() && source.getAttacker() == null) {
+        if(!source.isIndirect() && source.getAttacker() == null) {
 
             killIt(!source.isOf(DamageTypes.IN_FIRE) && !source.isOf(DamageTypes.ON_FIRE));
 
@@ -358,61 +361,52 @@ public class DiceCubeEntity extends Entity {
         this.discard();
     }
 
-    public static int getDyedColor(DyeColor color) {
-        if (color == DyeColor.WHITE) {
-            int i =  color.getEntityColor();
-            return ColorHelper.Argb.getArgb(
-                    255,
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getRed(i) * 1.025F), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getGreen(i) * 1.025F), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getBlue(i) * 1.025F), 255)
-            );
-        }else if (color == DyeColor.PINK) {
-            int i = ColorHelper.Argb.fullAlpha(14381973);
-            float brightnessFactor = 1.2125F;
-            return ColorHelper.Argb.getArgb(
-                    255,
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getRed(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getGreen(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getBlue(i) * brightnessFactor), 255)
-            );
+    public static int fullAlpha(int argb) {
+        return argb | 0xFF000000;
+    }
+
+
+
+    public static float[] getDyedColor(DyeColor color) {
+        if (color == DyeColor.PINK) {
+            int i = fullAlpha(14381973);
+            int j = (i & 0xFF0000) >> 16;
+            int k = (i & 0xFF00) >> 8;
+            int l = (i & 0xFF);
+            return new float[]{
+                    j / 255.0F, k / 255.0F, l / 255.0F
+            };
         }else if (color == DyeColor.CYAN) {
-            int i = ColorHelper.Argb.fullAlpha(151115456);
-            float brightnessFactor = 1.0525F;
-            return ColorHelper.Argb.getArgb(
-                    255,
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getRed(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getGreen(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getBlue(i) * brightnessFactor), 255)
-            );
+            int i = fullAlpha(151115456);
+            int j = (i & 0xFF0000) >> 16;
+            int k = (i & 0xFF00) >> 8;
+            int l = (i & 0xFF);
+            return new float[]{
+                    j / 255.0F, k / 255.0F, l / 255.0F
+            };
         }else if (color == DyeColor.YELLOW) {
-            int i = ColorHelper.Argb.fullAlpha(16767545);
-            float brightnessFactor = 1.2628F;
-            return ColorHelper.Argb.getArgb(
-                    255,
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getRed(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getGreen(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getBlue(i) * brightnessFactor), 255)
-            );
+            int i = fullAlpha(16767545);
+            int j = (i & 0xFF0000) >> 16;
+            int k = (i & 0xFF00) >> 8;
+            int l = (i & 0xFF);
+            return new float[]{
+                    j / 255.0F, k / 255.0F, l / 255.0F
+            };
         } else {
-            int i = color.getEntityColor();
-            float brightnessFactor = 1.25F;
-            return ColorHelper.Argb.getArgb(
-                    255,
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getRed(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getGreen(i) * brightnessFactor), 255),
-                    Math.min(MathHelper.floor((float) ColorHelper.Argb.getBlue(i) * brightnessFactor), 255)
-            );
+            return color.getColorComponents();
         }
     }
 
     public DyeColor getColor() {
-        return DyeColor.byId(this.dataTracker.get(COLOR) & 15);
+        return DyeColor.byId(this.dataTracker.get(COLOR));
+    }
+
+    public ColorIndexIndicator getColor_() {
+        return ColorIndexIndicator.byId(this.dataTracker.get(COLOR));
     }
 
     public void setColor(DyeColor color) {
-        byte b = this.dataTracker.get(COLOR);
-        this.dataTracker.set(COLOR, (byte)(b & 240 | color.getId() & 15));
+        this.dataTracker.set(COLOR, color.getId());
     }
 
     public static DyeColor generateDefaultColor() {
@@ -458,16 +452,16 @@ public class DiceCubeEntity extends Entity {
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        builder.add(ROLL_FLOOR,0f);
-        builder.add(PREVIOUS_Y_VEL,0f);
-        builder.add(COLOR, (byte)0);
-        builder.add(EVENT_USE, false);
-        builder.add(POINT, 1);
-        builder.add(OWNER, "");
-        builder.add(LUCK_INDICATOR, 0);
-        builder.add(COLLIDE, true);
-        builder.add(ILLUMINANCE, false);
+    protected void initDataTracker() {
+        this.dataTracker.startTracking(ROLL_FLOOR, 0f);
+        this.dataTracker.startTracking(PREVIOUS_Y_VEL, 0f);
+        this.dataTracker.startTracking(COLOR, 0);
+        this.dataTracker.startTracking(EVENT_USE, false);
+        this.dataTracker.startTracking(POINT, 1);
+        this.dataTracker.startTracking(OWNER, "");
+        this.dataTracker.startTracking(LUCK_INDICATOR, 0);
+        this.dataTracker.startTracking(COLLIDE, true);
+        this.dataTracker.startTracking(ILLUMINANCE, false);
     }
 
     @Override
