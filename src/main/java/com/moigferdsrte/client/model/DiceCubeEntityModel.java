@@ -1,6 +1,9 @@
-package com.moigferdsrte.entity.refine;
+package com.moigferdsrte.client.model;
 
 import com.moigferdsrte.Entrance;
+import com.moigferdsrte.entity.refine.DiceCubeEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -8,7 +11,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-
+@Environment(EnvType.CLIENT)
 public class DiceCubeEntityModel extends EntityModel<DiceCubeEntity> {
 
     private final ModelPart dice;

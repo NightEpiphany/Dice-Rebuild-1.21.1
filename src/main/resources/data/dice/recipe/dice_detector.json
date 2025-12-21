@@ -1,0 +1,27 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"ICI",
+		"CBC",
+		"IAI"
+	],
+	"key": {
+		"I": {
+		"item": "minecraft:cobblestone"
+		},
+		"B": {
+		"item": "minecraft:redstone"
+		},
+		"C": {
+		"item": "minecraft:redstone_torch"
+		},
+		"A": {
+		"tag": "dice:dice"
+		}
+	},
+	"result": {
+		"count": 1,
+		"id": "dice:dice_detector"
+	}
+}

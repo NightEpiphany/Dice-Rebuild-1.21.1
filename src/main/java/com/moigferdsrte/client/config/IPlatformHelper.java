@@ -1,10 +1,13 @@
-package com.moigferdsrte.config;
+package com.moigferdsrte.client.config;
 
 import com.moigferdsrte.Entrance;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.nio.file.Path;
 import java.util.ServiceLoader;
 
+@Environment(EnvType.CLIENT)
 public interface IPlatformHelper {
     public static final IPlatformHelper INSTANCE = load(IPlatformHelper.class);
 

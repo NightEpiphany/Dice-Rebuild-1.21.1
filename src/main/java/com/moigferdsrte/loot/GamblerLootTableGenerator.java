@@ -1,6 +1,6 @@
-package com.moigferdsrte.entity.extension;
+package com.moigferdsrte.loot;
 
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.init.RefineRegistry;
 import net.minecraft.data.server.loottable.EntityLootTableGenerator;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
@@ -12,7 +12,6 @@ import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 
 public class GamblerLootTableGenerator extends EntityLootTableGenerator {
     public GamblerLootTableGenerator(RegistryWrapper.WrapperLookup registryLookup) {

@@ -1,8 +1,11 @@
-package com.moigferdsrte.config;
+package com.moigferdsrte.client.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.moigferdsrte.ClientEntrance;
 import com.moigferdsrte.Entrance;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -16,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 
+@Environment(EnvType.CLIENT)
 public class DiceCubeConfig {
     private static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
@@ -82,8 +86,8 @@ public class DiceCubeConfig {
         @Override
         public void onEndTick(MinecraftClient minecraftClient) {
             while (this.toggleParticle.wasPressed()) {
-                TestClient.config().generalSettings.enable = !TestClient.config().generalSettings.enable;
-                TestClient.config().save();
+                ClientEntrance.config().generalSettings.enable = !ClientEntrance.config().generalSettings.enable;
+                ClientEntrance.config().save();
 
             }
         }

@@ -1,10 +1,12 @@
-package com.moigferdsrte.entity.refine;
+package com.moigferdsrte.init;
 
 import com.moigferdsrte.Entrance;
 import com.moigferdsrte.block.DiceDetectorBlock;
-import com.moigferdsrte.entity.extension.GamblerEntity;
+import com.moigferdsrte.entity.GamblerEntity;
+import com.moigferdsrte.entity.refine.DiceCubeEntity;
 import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeEntity;
-import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeItem;
+import com.moigferdsrte.item.StickyDiceCubeItem;
+import com.moigferdsrte.item.DiceCubeItem;
 import com.moigferdsrte.particle.DiceCubeParticle;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;

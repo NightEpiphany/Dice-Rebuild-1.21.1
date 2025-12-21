@@ -1,6 +1,8 @@
-package com.moigferdsrte.entity.refine;
+package com.moigferdsrte.client.renderer;
 
 import com.moigferdsrte.Entrance;
+import com.moigferdsrte.client.model.DiceCubeEntityModel;
+import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
@@ -15,23 +17,24 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.LightType;
 
 @Environment(EnvType.CLIENT)
-public class DiceCubeEntityRenderer extends EntityRenderer<DiceCubeEntity> {
-
-    public static final Identifier TEXTURE = Identifier.of(Entrance.MOD_ID, "textures/entity/d6.png");
+public class StickyDiceCubeEntityRenderer extends EntityRenderer<StickyDiceCubeEntity> {
 
     protected final DiceCubeEntityModel dice;
 
-    public DiceCubeEntityRenderer(EntityRendererFactory.Context ctx) {
+    public static final Identifier SLIME_TEXTURE = Identifier.of(Entrance.MOD_ID, "textures/entity/slime_d6.png");
+    public static final Identifier HONEY_TEXTURE = Identifier.of(Entrance.MOD_ID, "textures/entity/honey_d6.png");
+
+    public StickyDiceCubeEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);
-        dice = new DiceCubeEntityModel(ctx.getPart(DiceCubeEntityModel.LAYER));
+        this.dice = new DiceCubeEntityModel(ctx.getPart(DiceCubeEntityModel.STICKY_LAYER));
     }
 
     @Override
-    public void render(DiceCubeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(StickyDiceCubeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.push();
 
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F + entity.getDataTracker().get(DiceCubeEntity.ROLL_FLOOR)*20));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F + entity.getDataTracker().get(StickyDiceCubeEntity.ROLL_FLOOR)*20));
         matrices.translate(0,-14/16f,0);
         switch (entity.getRandomPoint()){
             case 1 -> {
@@ -83,17 +86,17 @@ public class DiceCubeEntityRenderer extends EntityRenderer<DiceCubeEntity> {
                 }
             }
         }
-        dice.render(matrices,vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity))),light, OverlayTexture.DEFAULT_UV, DiceCubeEntity.getDyedColor(entity.getColor()));
+        dice.render(matrices,vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity))),light, OverlayTexture.DEFAULT_UV, -1);
         matrices.pop();
     }
 
     @Override
-    public Identifier getTexture(DiceCubeEntity entity) {
-        return TEXTURE;
+    public Identifier getTexture(StickyDiceCubeEntity entity) {
+        return entity.getDiceType() ? SLIME_TEXTURE : HONEY_TEXTURE;
     }
 
     @Override
-    protected int getBlockLight(DiceCubeEntity entity, BlockPos pos) {
+    protected int getBlockLight(StickyDiceCubeEntity entity, BlockPos pos) {
         return entity.getIlluminance() || entity.isOnFire() ? 15 : entity.getWorld().getLightLevel(LightType.BLOCK, pos);
     }
 }

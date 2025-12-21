@@ -1,9 +1,12 @@
-package com.moigferdsrte.config;
+package com.moigferdsrte.client.config;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.nio.file.Path;
 
+@Environment(EnvType.CLIENT)
 public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override

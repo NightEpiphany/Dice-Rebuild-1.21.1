@@ -2,6 +2,7 @@ package com.moigferdsrte.block;
 
 import com.moigferdsrte.entity.refine.DiceCubeEntity;
 import com.moigferdsrte.entity.refine.sticky.StickyDiceCubeEntity;
+import com.moigferdsrte.event.DiceEvent;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -40,11 +41,10 @@ public class DiceDetectorBlock extends FacingBlock {
     public static final IntProperty POWER = Properties.POWER;
     public static final MapCodec<DiceDetectorBlock> CODEC = createCodec(DiceDetectorBlock::new);
 
-    private final DiceValueIndicator indicator;
+    private int value;
 
     public DiceDetectorBlock(Settings settings) {
         super(settings);
-        this.indicator = new DiceValueIndicator(this, 0);
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.SOUTH).with(POWER, 0));
     }
 
@@ -89,7 +89,7 @@ public class DiceDetectorBlock extends FacingBlock {
 
     @Override
     protected int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return state.get(FACING) == direction ? this.indicator.value : 0;
+        return state.get(FACING) == direction ? state.get(POWER) : 0;
     }
 
     @Override
@@ -114,10 +114,31 @@ public class DiceDetectorBlock extends FacingBlock {
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        world.setBlockState(pos, state.with(POWER, dicePointCalculation(pos, state, world)), Block.NOTIFY_LISTENERS);
-        this.scheduleTick(world, pos);
-        this.indicator.updateValue(pos, state, world);
-        this.updateNeighbors(world, pos, state);
+        if (!world.isClient) {
+            world.setBlockState(pos, state.with(POWER, dicePointCalculation(pos, state, world)), Block.NOTIFY_LISTENERS);
+            this.scheduleTick(world, pos);
+            this.updateNeighbors(world, pos, state);
+        }
+    }
+
+    @Override
+    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        DiceValueIndicator event = new DiceValueIndicator(pos, state, world);
+        DiceEvent.DICE_VALUE_CALLBACK_EVENT.invoker().update(event);
+        this.value = event.value;
+        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+    }
+
+    @Override
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (!world.isClient && entity.age % 10 == 0) {
+            int i = dicePointCalculation(pos, state, world);
+            int j = entity instanceof PersistentProjectileEntity ? 20 : 8;
+            if (!world.getBlockTickScheduler().isQueued(pos, state.getBlock())) {
+                setPower(world, state, i, pos, j);
+            }
+        }
+        super.onEntityCollision(state, world, pos, entity);
     }
 
     @Override
@@ -185,11 +206,5 @@ public class DiceDetectorBlock extends FacingBlock {
         if (!world.isClient() && !world.getBlockTickScheduler().isQueued(pos, this)) {
             world.scheduleBlockTick(pos, this, 2);
         }
-    }
-
-    @Override
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-        super.appendTooltip(stack, context, tooltip, options);
-        tooltip.add(Text.literal("WIP").formatted(Formatting.BOLD));
     }
 }

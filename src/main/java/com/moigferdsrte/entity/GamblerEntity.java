@@ -1,7 +1,7 @@
-package com.moigferdsrte.entity.extension;
+package com.moigferdsrte.entity;
 
 import com.moigferdsrte.entity.refine.DiceCubeEntity;
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.init.RefineRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.provider.EnchantmentProviders;
 import net.minecraft.entity.*;

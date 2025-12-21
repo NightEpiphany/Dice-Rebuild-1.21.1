@@ -1,6 +1,6 @@
 package com.moigferdsrte.mixin;
 
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.init.RefineRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;

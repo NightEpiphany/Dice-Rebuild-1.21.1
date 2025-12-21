@@ -1,6 +1,8 @@
-package com.moigferdsrte.entity.extension;
+package com.moigferdsrte.client.renderer.feature;
 
 import com.moigferdsrte.Entrance;
+import com.moigferdsrte.client.model.CarriedDiceCubeEntityModel;
+import com.moigferdsrte.entity.GamblerEntity;
 import com.moigferdsrte.entity.refine.DiceCubeEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

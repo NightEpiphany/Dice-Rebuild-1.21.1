@@ -1,6 +1,6 @@
 package com.moigferdsrte.mixin;
 
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.init.RefineRegistry;
 import net.minecraft.data.server.loottable.vanilla.VanillaChestLootTableGenerator;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;

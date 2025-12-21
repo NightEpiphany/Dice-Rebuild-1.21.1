@@ -1,7 +1,9 @@
 package com.moigferdsrte;
 
-import com.moigferdsrte.entity.extension.GamblerEntity;
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.block.DiceDetectorBlock;
+import com.moigferdsrte.entity.GamblerEntity;
+import com.moigferdsrte.event.DiceEvent;
+import com.moigferdsrte.init.RefineRegistry;
 import com.moigferdsrte.network.DiceNetwork;
 import com.moigferdsrte.particle.DiceCubeParticleFactory;
 import net.fabricmc.api.ModInitializer;
@@ -17,7 +19,9 @@ public class Entrance implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
+		DiceEvent.DICE_VALUE_CALLBACK_EVENT.register(event -> {
+		  	event.value = DiceDetectorBlock.dicePointCalculation(event.pos, event.state, event.world);
+		});
 		FabricDefaultAttributeRegistry.register(RefineRegistry.GAMBLER, GamblerEntity.createGamblerAttributes());
 		DiceCubeParticleFactory.init();
 		RefineRegistry.init();

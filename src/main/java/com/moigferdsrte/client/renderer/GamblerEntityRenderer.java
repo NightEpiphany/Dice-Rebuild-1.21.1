@@ -1,8 +1,11 @@
-package com.moigferdsrte.entity.extension;
+package com.moigferdsrte.client.renderer;
 
 
 import com.moigferdsrte.Entrance;
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.client.model.CarriedDiceCubeEntityModel;
+import com.moigferdsrte.client.renderer.feature.GamblerDiceFeatureRenderer;
+import com.moigferdsrte.entity.GamblerEntity;
+import com.moigferdsrte.init.RefineRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;

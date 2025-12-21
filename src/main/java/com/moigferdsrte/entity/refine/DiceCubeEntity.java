@@ -1,5 +1,7 @@
 package com.moigferdsrte.entity.refine;
 
+import com.moigferdsrte.client.renderer.DiceCubeEntityRenderer;
+import com.moigferdsrte.init.RefineRegistry;
 import com.moigferdsrte.particle.DiceCubeParticle;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;

@@ -1,6 +1,6 @@
 package com.moigferdsrte.mixin;
 
-import com.moigferdsrte.entity.extension.GamblerLootTableGenerator;
+import com.moigferdsrte.loot.GamblerLootTableGenerator;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.server.loottable.LootTableProvider;
 import net.minecraft.data.server.loottable.vanilla.*;

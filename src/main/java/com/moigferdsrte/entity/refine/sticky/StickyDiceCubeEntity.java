@@ -1,7 +1,7 @@
 package com.moigferdsrte.entity.refine.sticky;
 
 import com.moigferdsrte.entity.refine.DiceHitBoxEntity;
-import com.moigferdsrte.entity.refine.RefineRegistry;
+import com.moigferdsrte.init.RefineRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
