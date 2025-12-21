@@ -23,7 +23,6 @@ public class Entrance implements ModInitializer {
 		  	event.value = DiceDetectorBlock.dicePointCalculation(event.pos, event.state, event.world);
 		});
 		FabricDefaultAttributeRegistry.register(RefineRegistry.GAMBLER, GamblerEntity.createGamblerAttributes());
-		DiceCubeParticleFactory.init();
 		RefineRegistry.init();
 		DiceNetwork.init();
 		LOGGER.info("Hello Fabric world!");

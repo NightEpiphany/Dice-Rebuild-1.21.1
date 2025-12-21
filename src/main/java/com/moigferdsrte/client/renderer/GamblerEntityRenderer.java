@@ -1,6 +1,5 @@
 package com.moigferdsrte.client.renderer;
 
-
 import com.moigferdsrte.Entrance;
 import com.moigferdsrte.client.model.CarriedDiceCubeEntityModel;
 import com.moigferdsrte.client.renderer.feature.GamblerDiceFeatureRenderer;
@@ -18,6 +17,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.util.Identifier;
 
+import static com.moigferdsrte.ClientEntrance.GAMBLER_LAYER;
+
 @Environment(EnvType.CLIENT)
 public class GamblerEntityRenderer extends IllagerEntityRenderer<GamblerEntity> {
 
@@ -26,7 +27,7 @@ public class GamblerEntityRenderer extends IllagerEntityRenderer<GamblerEntity> 
     private static final Identifier TEXTURE_ANGRY = Identifier.of(Entrance.MOD_ID, "textures/entity/illager/gambler_angry.png");
 
     public GamblerEntityRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx, new IllagerEntityModel<>(ctx.getPart(RefineRegistry.GAMBLER_LAYER)), 0.5f);
+        super(ctx, new IllagerEntityModel<>(ctx.getPart(GAMBLER_LAYER)), 0.5f);
         this.addFeature(new GamblerDiceFeatureRenderer(this, new CarriedDiceCubeEntityModel(ctx.getPart(CarriedDiceCubeEntityModel.LAYER))));
         this.addFeature(new HeldItemFeatureRenderer<>(this, ctx.getHeldItemRenderer()){
             public void render(

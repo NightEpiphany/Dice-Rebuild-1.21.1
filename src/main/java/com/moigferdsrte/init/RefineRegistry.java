@@ -56,8 +56,6 @@ public class RefineRegistry {
     public static final GameRules.Key<GameRules.IntRule> GAMBLER_DICE_VISIBLE_DISTANCE =
             GameRuleRegistry.register("gamblerDiceVisibleDistance", GameRules.Category.MISC, GameRuleFactory.createIntRule(10));
 
-    public static final EntityModelLayer GAMBLER_LAYER = new EntityModelLayer(Identifier.of(Entrance.MOD_ID, "gambler"), "main");
-
     public static final SoundEvent DICE_ROLLING = Registry.register(
             Registries.SOUND_EVENT,
             Identifier.of(Entrance.MOD_ID, "dice_rolling"),
